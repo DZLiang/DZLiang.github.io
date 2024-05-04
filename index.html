@@ -1,14 +1,60 @@
-Hello World!
-<script>
-  let image = document.createElement("img");
-  image.src = "https://i1.hdslb.com/bfs/archive/6a0fef8ad1eed7e571bc0cdb97858e54d39d4af4.jpg";
-  document.body.appendChild(image);
-  image = document.createElement("img");
-  image.src = "https://i0.hdslb.com/bfs/article/a17d1515256b20386ccaaa4371db8204256244604.jpg@1256w_2086h_!web-article-pic.avif";
-  document.body.appendChild(image);
-  image = document.createElement("img");
-  image.src = "https://lain.bgm.tv/r/200/pic/cover/l/19/1a/405785_u9it9.jpg";
-  document.body.appendChild(image);
-
-  
-</script>
+<!doctype html>
+<html>
+  <head>
+    <meta charset='UTF-8' />
+    <title>index</title>
+  </head>
+  <body>
+    <script src='./hcj.js'></script>
+    <script>
+      var HCJ = new HtmlCssJs();
+      HCJ.load_base_module(() => {
+          HCJ.init_responsive_layout_meta();
+          HCJ.init_beian_links("https://gw.alicdn.com/tfs/TB1jwakrbH1gK0jSZFwXXc7aXXa-20-20.png",
+                               "0000000000", "000000000");
+          HCJ.wait_codes_ready(() => {
+          let xhr = HCJ.XHR.alloc();
+          xhr.open("GET", "https://api.bgm.tv/calendar", true);
+          HCJ.XHR.set_callback(xhr, (ret, xhr) => {
+              let calendar = JSON.parse(xhr.responseText);
+              console.log(calendar);
+              let main = document.createElement("main");
+              main.style= "margin-left:auto; margin-right:auto; width:fit-content;"
+              document.body.appendChild(main);
+              
+              let panel = document.createElement("div");
+              panel.style="display:inline-flex; background-position:center; background-image:url(/bg.jpg);";
+              main.appendChild(panel);
+              
+              let div = document.createElement("div");
+              div.style = "display:inline-flex; height:50vh; overflow:scroll; ";
+              panel.appendChild(div);
+              
+              for (let i = 0; i < calendar.length; i++) {
+                  let col = calendar[i];
+                  let list = HCJ.LIST.alloc("ul");
+                  list.style = "list-style:none; padding:0;";
+                  div.appendChild(list);
+                  let item = HCJ.LIST.allocItem();
+                  list.appendChild(item);
+                  item.innerText = col["weekday"]["cn"];
+                  item.style="font-size:3vw";
+                  let bgms = col["items"];
+                  for (let j = 0; j < bgms.length; j++) {
+                      let bgm = HCJ.LIST.allocItem();
+                      list.appendChild(bgm);
+                      let style = "background-position:center;";
+                      style += "background-size:cover;";
+                      style += "width:13vw;";
+                      style += "height:20vw;";
+                      style += 'background-image:url("https://api.bgm.tv/v0/subjects/${bgmid}}/image?type=small");';
+                      style += 'background-size:auto;';
+                      style += 'background-position:center;';
+                      bgm.style = style;
+                  }
+              }
+          });
+          });
+    </script>
+  </body>
+</html>
